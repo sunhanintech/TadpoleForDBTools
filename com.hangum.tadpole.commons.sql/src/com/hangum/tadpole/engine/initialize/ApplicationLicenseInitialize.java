@@ -12,6 +12,7 @@ package com.hangum.tadpole.engine.initialize;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
@@ -26,17 +27,24 @@ import com.hangum.tadpole.engine.license.LicenseExtensionHandler;
  */
 public class ApplicationLicenseInitialize {
 	private static final Logger logger = Logger.getLogger(ApplicationLicenseInitialize.class);
-	private static String TDB_License_FILE = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
+	public static String TDB_License_FILE = ApplicationArgumentUtils.getResourcesDir() + "TadpoleHub.lic";
 	
 	public static void load() {
 		if(ApplicationArgumentUtils.isInitialize) return;
 		
 		try {
-			File fileExist = new File(TDB_License_FILE);
-			if(fileExist.isFile()) {
-				logger.info("******** Start enterprise version ");
+			String strLicenseInfo = ApplicationArgumentUtils.initDBServer();
+			if(!StringUtils.isEmpty(strLicenseInfo)) {
+				logger.info("******** [0] Start enterprise version ");
 				LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
-				linceseHandler.license(fileExist);
+				linceseHandler.license(strLicenseInfo);
+			} else {
+				File fileExist = new File(TDB_License_FILE);
+				if(fileExist.isFile()) {
+					logger.info("******** [1] Start enterprise version ");
+					LicenseExtensionHandler linceseHandler = new LicenseExtensionHandler();
+					linceseHandler.license(fileExist);
+				}
 			}
 			ApplicationArgumentUtils.isInitialize = true;
 		} catch(Exception e) {

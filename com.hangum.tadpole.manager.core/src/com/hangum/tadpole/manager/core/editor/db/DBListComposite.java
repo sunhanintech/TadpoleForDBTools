@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -59,6 +60,8 @@ import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserRole;
+import com.hangum.tadpole.engine.utils.LicenseDAO;
+import com.hangum.tadpole.engine.utils.LicenseValidator;
 import com.hangum.tadpole.engine.utils.TimeZoneUtil;
 import com.hangum.tadpole.manager.core.Activator;
 import com.hangum.tadpole.manager.core.Messages;
@@ -68,11 +71,14 @@ import com.hangum.tadpole.manager.core.editor.db.dialogs.DBAccessControlDialog;
 import com.hangum.tadpole.manager.core.editor.db.dialogs.DBOthresConfigDialog;
 import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditor;
 import com.hangum.tadpole.manager.core.editor.executedsql.SQLAuditEditorInput;
+import com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.DBLoginDialog;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.ModifyDBDialog;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerLabelProvider;
+import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -97,6 +103,9 @@ public class DBListComposite extends Composite {
 	
 	private AdminCompFilter filter;
 	private Text textSearch;
+	
+	// add, delete db
+	private ToolItem tltmDeleteDB;
 
 	// select database
 	private ToolItem tltmConfigurationDB;
@@ -146,6 +155,59 @@ public class DBListComposite extends Composite {
 			}
 		});
 		tltmRefresh.setToolTipText(CommonMessages.get().Refresh);
+
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
+		ToolItem tltmAddDB = new ToolItem(toolBar, SWT.NONE);
+		tltmAddDB.setImage(GlobalImageUtils.getAdd());
+		tltmAddDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String strGroupName = "";
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(!ss.isEmpty())  {
+					if(ss.getFirstElement() instanceof UserDBDAO) {
+						strGroupName = ((UserDBDAO)ss.getFirstElement()).getGroup_name();
+					} else if(ss.getFirstElement() instanceof ManagerListDTO) {
+						strGroupName = ((ManagerListDTO)ss.getFirstElement()).getName();
+					}
+				}
+				
+				final DBLoginDialog dialog = new DBLoginDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), strGroupName);
+				final int ret = dialog.open();
+				
+				final UserDBDAO userDB = dialog.getDTO();
+				final ManagerViewer managerView = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ManagerViewer.ID);			
+				
+				if(userDB == null || ret != Dialog.OK) return;
+				Display.getCurrent().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						managerView.addUserDB(userDB, true);
+					}
+				});	// end display
+				
+				initData();
+			}
+		});
+		tltmAddDB.setToolTipText(CommonMessages.get().Add);
+		
+		tltmDeleteDB = new ToolItem(toolBar, SWT.NONE);
+		tltmDeleteDB.setImage(GlobalImageUtils.getDelete());
+		tltmDeleteDB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
+				if(ss.isEmpty()) return;
+				
+				DeleteDBAction deleteDB = new DeleteDBAction();
+				if(deleteDB.removeDatabase((UserDBDAO)ss.getFirstElement())) {
+					initData();
+				}
+			}
+		});
+		tltmDeleteDB.setEnabled(false);
+		tltmDeleteDB.setToolTipText(Messages.get().RemoveDatabase);
 		
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
@@ -188,25 +250,34 @@ public class DBListComposite extends Composite {
 				IStructuredSelection ss = (IStructuredSelection)tvDBList.getSelection();
 				if(ss.isEmpty()) return;
 				
-				UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
-				
-				FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
-				dialog.open();
-				
-				userDB.getListChildren().clear();
-				try {
-					List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
-					if(userDB.getListChildren().isEmpty()) {
-						for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
-							tadpoleUserDbRoleDAO.setParent(userDB);
-						}
+				LicenseDAO licenseDAO = LicenseValidator.getLicense();
+				if(licenseDAO.isEnterprise()) {
+					if(licenseDAO.isValidate()) {
+						UserDBDAO userDB = (UserDBDAO)ss.getFirstElement();
 						
-						userDB.setListChildren(listUser);
-						tvDBList.refresh(userDB, true);
-						tvDBList.expandToLevel(3);
+						FindUserAndDBRoleDialog dialog = new FindUserAndDBRoleDialog(getShell());
+						dialog.open();
+						
+						userDB.getListChildren().clear();
+						try {
+							List<TadpoleUserDbRoleDAO> listUser = TadpoleSystem_UserRole.getUserRoleList(userDB);
+							if(userDB.getListChildren().isEmpty()) {
+								for (TadpoleUserDbRoleDAO tadpoleUserDbRoleDAO : listUser) {
+									tadpoleUserDbRoleDAO.setParent(userDB);
+								}
+								
+								userDB.setListChildren(listUser);
+								tvDBList.refresh(userDB, true);
+								tvDBList.expandToLevel(3);
+							}
+						} catch (Exception e3) {
+							logger.error(Messages.get().DBListComposite_10, e3);
+						}
+					} else {
+						MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, licenseDAO.getMsg());
 					}
-				} catch (Exception e3) {
-					logger.error(Messages.get().DBListComposite_10, e3);
+				} else {
+					MessageDialog.openInformation(null, CommonMessages.get().Confirm, CommonMessages.get().ThisFunctionEnterprise);
 				}
 			}
 		});
@@ -324,6 +395,7 @@ public class DBListComposite extends Composite {
 					
 					tltmConfigurationDB.setEnabled(true);
 					tltmOtherInformation.setEnabled(true);
+					tltmDeleteDB.setEnabled(true);
 					if("YES".equalsIgnoreCase(SessionManager.getIsSharedDB())) tltmAddUser.setEnabled(true);
 					else tltmAddUser.setEnabled(false);
 					
@@ -347,6 +419,7 @@ public class DBListComposite extends Composite {
 					tltmAddUser.setEnabled(false);
 					tltmConfigurationDB.setEnabled(false);
 					tltmOtherInformation.setEnabled(false);
+					tltmDeleteDB.setEnabled(false);
 					
 					tltmQueryHistory.setEnabled(false);
 					tltmSQLEditor.setEnabled(false);
@@ -360,6 +433,7 @@ public class DBListComposite extends Composite {
 
 					tltmConfigurationDB.setEnabled(false);
 					tltmOtherInformation.setEnabled(false);
+					tltmDeleteDB.setEnabled(false);
 					
 					tltmAddUser.setEnabled(false);
 					tltmUserDelete.setEnabled(false);
