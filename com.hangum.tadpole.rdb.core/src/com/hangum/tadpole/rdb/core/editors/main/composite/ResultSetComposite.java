@@ -960,8 +960,9 @@ public class ResultSetComposite extends Composite {
 					}
 					
 					if(isCheckRunning) {
-						if(logger.isDebugEnabled()) logger.debug("------- thread sleep..4000.....................................................");
-						try { Thread.sleep(4000);} catch(Exception e) {}
+//						4000 일경우 취소 버튼이 잘안눌린다. 1000 일경우 적당하지 싶은데?
+//						try { Thread.sleep(4000);} catch(Exception e) {}
+						try { Thread.sleep(1000);} catch(Exception e) {}
 						
 						if(i>100) i = 15;
 						else i += 5;

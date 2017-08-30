@@ -5,7 +5,7 @@ import java.sql.Connection;
 import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
-import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
+//import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -34,7 +34,7 @@ public class TadpoleSQLExtManager extends BasicDBInfo {
 		
 		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 			try {
-				conn = DynamoDBManager.getInstance().getConnection(userDB.getUrl());
+				//conn = DynamoDBManager.getInstance().getConnection(userDB.getUrl());
 			} catch(Exception e) {
 				logger.error("***** get DB Instance seq is " + userDB.getSeq() + "\n" , e);
 				throw new TadpoleSQLManagerException(e);

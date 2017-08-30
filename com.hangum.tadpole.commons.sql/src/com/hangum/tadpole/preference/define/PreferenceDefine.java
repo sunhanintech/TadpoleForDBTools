@@ -157,7 +157,7 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String RDB_CHARACTER_SHOW_IN_THE_COLUMN_VALUE = "100";
 	
 	public static final String RDB_RESULT_SET_HEAD_CLICK = "RDB_RESULT_SET_HEAD_CLICK";
-	public static final String RDB_RESULT_SET_HEAD_CLICK_VALUE = "Sorting";
+	public static final String RDB_RESULT_SET_HEAD_CLICK_VALUE = "Sort Data";
 	
 	
 	/** define Amazon key */ 

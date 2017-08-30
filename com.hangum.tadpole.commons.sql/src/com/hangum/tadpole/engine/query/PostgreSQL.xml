@@ -312,16 +312,17 @@ FROM
  -->
 <select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
 	SELECT  
-			nspname "schema_name",
-			proname "name", 
-			'PROCEDURE' as type 
+			  nspname as "schema_name"
+			, proname as "name"
+			, 'PROCEDURE' as type 
+			, proargtypes as definer
+			, array_cat(COALESCE(proargnames, array['none']), array['RETURNS ' || text(typname)]) as comment 
 	FROM    pg_catalog.pg_namespace n 
-	JOIN    pg_catalog.pg_proc p 
-	ON      pronamespace = n.oid 
+		inner join pg_catalog.pg_proc p ON p.pronamespace = n.oid 
+		left join pg_catalog.pg_type t on t.oid = p.prorettype
 	WHERE    
 			nspname NOT IN ('pg_catalog', 'information_schema')
 		AND nspname = #schema_name#
-		AND pronargs = 0
 		AND prorettype = 2278; 
 </select>
 

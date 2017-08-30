@@ -103,12 +103,12 @@ public class AWSDynamoLoginComposite extends AbstractLoginComposite {
 		
 		comboRegionName = new Combo(grpConnectionType, SWT.READ_ONLY);
 		comboRegionName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		Map<String, String> mapRegion = DynamoDBManager.getInstance().getRegionList();
-		for (String strKey : mapRegion.keySet()) {
-			comboRegionName.add(strKey);
-			comboRegionName.setData(strKey, (String)mapRegion.get(strKey));
-		}
-		comboRegionName.setVisibleItemCount(mapRegion.size());
+//		Map<String, String> mapRegion = DynamoDBManager.getInstance().getJDBCRegionList();
+//		for (String strKey : mapRegion.keySet()) {
+//			comboRegionName.add(strKey);
+//			comboRegionName.setData(strKey, (String)mapRegion.get(strKey));
+//		}
+//		comboRegionName.setVisibleItemCount(mapRegion.size());
 		comboRegionName.select(0);
 		
 		Label lblJdbcOptions = new Label(grpConnectionType, SWT.NONE);

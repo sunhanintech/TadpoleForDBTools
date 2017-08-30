@@ -33,7 +33,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.TadpoleProperties;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.WarningMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -81,20 +83,19 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		new Label(container, SWT.NONE);
 		
 		btnQueryProfilling = new Button(container, SWT.CHECK);
-		btnQueryProfilling.setText(Messages.get().QueryProfilling);
+		btnQueryProfilling.setText(Messages.get().MySQLQueryProfiling);
+		
 		
 		Label lblResultType = new Label(container, SWT.NONE);
-		lblResultType.setText(Messages.get().RDBPreferencePage_resultType);
+		lblResultType.setText(Messages.get().ResultFormat);
 		
 		comboRDBResultType = new Combo(container, SWT.READ_ONLY);
 		comboRDBResultType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboRDBResultType.add("Table");
-//		comboRDBResultType.add("Text");
-//		comboRDBResultType.add("JSON");
+		comboRDBResultType.add(Messages.get().Table);
 		comboRDBResultType.select(0);
 		
 		Label lblNumberColumnAdd = new Label(container, SWT.NONE);
-		lblNumberColumnAdd.setText(Messages.get().RDBPreferencePage_lblNumberColumnAdd_text);
+		lblNumberColumnAdd.setText(Messages.get().MaximumNumberOfCharacters);
 		
 		comboRDBNumberComma = new Combo(container, SWT.READ_ONLY);
 		comboRDBNumberComma.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -103,7 +104,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		comboRDBNumberComma.select(0);
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setText(Messages.get().DefaultPreferencePage_0);
+		lblNewLabel.setText(Messages.get().MaxNumOfRowsBySelect);
 		
 		textSelectLimit = new Text(container, SWT.BORDER);
 		textSelectLimit.addModifyListener(new ModifyListener() {
@@ -114,7 +115,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textSelectLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblNewLabel_1 = new Label(container, SWT.NONE);
-		lblNewLabel_1.setText(Messages.get().DefaultPreferencePage_other_labelText_1);
+		lblNewLabel_1.setText(Messages.get().RowsPerPage);
 		
 		textResultPage = new Text(container, SWT.BORDER);
 		textResultPage.addModifyListener(new ModifyListener() {
@@ -131,7 +132,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textNull.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblResultViewFont = new Label(container, SWT.NONE);
-		lblResultViewFont.setText(Messages.get().RDBPreferencePage_lblResultViewFont_text);
+		lblResultViewFont.setText(Messages.get().FontForResultPages);
 		
 		lblUserFont = new Label(container, SWT.NONE);
 		lblUserFont.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -145,10 +146,10 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 				setFontData();
 			}
 		});
-		btnNewButton.setText(Messages.get().RDBPreferencePage_btnNewButton_text);
+		btnNewButton.setText(Messages.get().Font);
 		
 		Label lblQueryTimeout = new Label(container, SWT.NONE);
-		lblQueryTimeout.setText(Messages.get().RDBPreferencePage_lblQueryTimeout_text);
+		lblQueryTimeout.setText(Messages.get().QueryTimeout);
 		
 		textQueryTimeout = new Text(container, SWT.BORDER);
 		textQueryTimeout.addModifyListener(new ModifyListener() {
@@ -159,10 +160,10 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textQueryTimeout.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCommitCount = new Label(container, SWT.NONE);
-		lblCommitCount.setText(Messages.get().RDBPreferencePage_lblCommitCount_text);
+		lblCommitCount.setText(Messages.get().BatchSize);
 		
 		textCommitCount = new Text(container, SWT.BORDER);
-		textCommitCount.setText(Messages.get().RDBPreferencePage_text_text);
+		textCommitCount.setText(Integer.toString(TadpoleProperties.ROWS_PER_PAGE_DEF));
 		textCommitCount.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent event) {
 				isValid();
@@ -171,7 +172,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textCommitCount.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblCharacterShownIn = new Label(container, SWT.NONE);
-		lblCharacterShownIn.setText(Messages.get().RDBPreferencePage_lblCharacterShownIn_text);
+		lblCharacterShownIn.setText(Messages.get().MaximumNumberOfCharactersPerColumn);
 		
 		textShowInTheColumn = new Text(container, SWT.BORDER);
 		textShowInTheColumn.setText(Messages.get().RDBPreferencePage_text_text_1);
@@ -183,12 +184,12 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		textShowInTheColumn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label labelClickResultHead = new Label(container, SWT.NONE);
-		labelClickResultHead.setText(Messages.get().ResultSetHeadCliking);
+		labelClickResultHead.setText(Messages.get().WhenClickingOnColumnName);
 		
 		comboResultHeadClick = new Combo(container, SWT.READ_ONLY);
 		comboResultHeadClick.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		comboResultHeadClick.add("Sorting");
-		comboResultHeadClick.add("Column name to editor");
+		comboResultHeadClick.add(Messages.get().SortData);
+		comboResultHeadClick.add(Messages.get().CopyColumnNameToEditor);
 		comboResultHeadClick.select(1);
 		
 		Label label = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -196,7 +197,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		label.setText(""); //$NON-NLS-1$
 		
 		Label lblNewLabel_2 = new Label(container, SWT.NONE);
-		lblNewLabel_2.setText(Messages.get().DefaultPreferencePage_other_labelText);
+		lblNewLabel_2.setText(Messages.get().OraclePlanTable);
 		
 		textOraclePlan = new Text(container, SWT.BORDER);
 		textOraclePlan.addModifyListener(new ModifyListener() {
@@ -215,7 +216,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 				planDialog.open();
 			}
 		});
-		btnCreatePlanTable.setText(Messages.get().RDBPreferencePage_btnCreatePlanTable_text);
+		btnCreatePlanTable.setText(Messages.get().CreatePlanTable);
 		
 		initDefaultValue();
 		
@@ -248,61 +249,80 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
 			textSelectLimit.setFocus();
 			setValid(false);
-			setErrorMessage(Messages.get().DefaultPreferencePage_0 + Messages.get().RDBPreferencePage_0);
+			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().MaxNumOfRowsBySelect));
 			return false;
-		} else if(!(NumberUtils.toInt(txtSelectLimit) >= 100 && NumberUtils.toInt(txtSelectLimit) <= 5000)) {
+		} else if(!((NumberUtils.toInt(txtSelectLimit) >= TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MIN) 
+				&& (NumberUtils.toInt(txtSelectLimit) <= TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MAX))) {
 			textSelectLimit.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_0, "100", "5,000"));
+			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+					                      Messages.get().MaxNumOfRowsBySelect, 
+					                      TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MIN, 
+					                      TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MAX));
 			return false;
 		} else if(!NumberUtils.isNumber(txtResultPage)) {
 			textResultPage.setFocus();
 			setValid(false);
-			setErrorMessage(Messages.get().DefaultPreferencePage_other_labelText_1 + Messages.get().RDBPreferencePage_0);
+			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().RowsPerPage));
 			return false;
-		} else if(!(NumberUtils.toInt(txtResultPage) >= 100 && NumberUtils.toInt(txtResultPage) <= 1000)) {
+		} else if(!((NumberUtils.toInt(txtResultPage) >= TadpoleProperties.ROWS_PER_PAGE_MIN)
+				 && (NumberUtils.toInt(txtResultPage) <= TadpoleProperties.ROWS_PER_PAGE_MAX))) {
 			textResultPage.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_other_labelText_1, "100", "1,000"));
+			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+					                      Messages.get().RowsPerPage, 
+					                      TadpoleProperties.ROWS_PER_PAGE_MIN, 
+					                      TadpoleProperties.ROWS_PER_PAGE_MAX));
 			return false;
 		} else if(!NumberUtils.isNumber(txtQueryTimtout)) {
 			textQueryTimeout.setFocus();
 
 			setValid(false);
-			setErrorMessage(Messages.get().RDBPreferencePage_lblQueryTimeout_text + Messages.get().RDBPreferencePage_0);
+			setErrorMessage(Messages.get().QueryTimeout + WarningMessages.get().EnterNumbersOnlyWithItem);
 			return false;
-		} else if(!(NumberUtils.toInt(txtQueryTimtout) >= 5 && NumberUtils.toInt(txtQueryTimtout) <= 60000)) {
+		} else if(!((NumberUtils.toInt(txtQueryTimtout) >= TadpoleProperties.QUERY_TIMEOUT_MIN)
+				 && (NumberUtils.toInt(txtQueryTimtout) <= TadpoleProperties.QUERY_TIMEOUT_MAX))) {
 			textQueryTimeout.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblQueryTimeout_text, "5", "60,000"));
+			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+					                      Messages.get().QueryTimeout, 
+					                      TadpoleProperties.QUERY_TIMEOUT_MIN, 
+					                      TadpoleProperties.QUERY_TIMEOUT_MAX));
 			return false;
 		} else if(!NumberUtils.isNumber(txtCommitCount)) {
 			textCommitCount.setFocus();
 
 			setValid(false);
-			setErrorMessage(Messages.get().RDBPreferencePage_lblCommitCount_text + Messages.get().RDBPreferencePage_0);
+			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().BatchSize));
 			return false;
-		} else if(!(NumberUtils.toInt(txtCommitCount) >= 1000 && NumberUtils.toInt(txtCommitCount) <= 10000)) {
+		} else if(!((NumberUtils.toInt(txtCommitCount) >= TadpoleProperties.BATCH_SIZE_MIN) 
+				 && (NumberUtils.toInt(txtCommitCount) <= TadpoleProperties.BATCH_SIZE_MAX))) {
 			textCommitCount.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCommitCount_text, "1,000", "10,000"));
+			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+					                      Messages.get().BatchSize, 
+					                      TadpoleProperties.BATCH_SIZE_MIN, 
+					                      TadpoleProperties.BATCH_SIZE_MAX));
 			return false;
 		} else if(!NumberUtils.isNumber(txtShownInTheColumn)) {
 			textShowInTheColumn.setFocus();
 
 			setValid(false);
-			setErrorMessage(Messages.get().RDBPreferencePage_lblCharacterShownIn_text + Messages.get().RDBPreferencePage_0);
+			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().BatchSize));
 			return false;
-//			
-//		} else if(!(NumberUtils.toInt(txtShownInTheColumn) >= 5 && NumberUtils.toInt(txtShownInTheColumn) <= 1000)) {
+//		} else if(!((NumberUtils.toInt(txtShownInTheColumn) >= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_COLUMN_MIN)
+//				 && (NumberUtils.toInt(txtShownInTheColumn) <= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_COLUMN_MAX))) {
 //			textShowInTheColumn.setFocus();
-//
+			
 //			setValid(false);
-//			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().RDBPreferencePage_lblCharacterShownIn_text, "5", "1,000"));
+//			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+//					                      Messages.get().MaximumNumberOfCharactersPerColumn,
+//					                      TadpoleProperties.NUMBER_OF_CHARACTERS_PER_COLUMN_MIN,
+//					                      TadpoleProperties.NUMBER_OF_CHARACTERS_PER_COLUMN_MAX));
 //			return false;
 		} else if("".equals(txtOraclePlan)) { //$NON-NLS-1$
 
