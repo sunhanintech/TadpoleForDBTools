@@ -53,6 +53,7 @@ public class CommonMessages {
 	public String ModifyMessage;
 	public String Save;
 	public String Run;
+	public String General;
 	
 	public String Refresh;
 	public String Clear;
