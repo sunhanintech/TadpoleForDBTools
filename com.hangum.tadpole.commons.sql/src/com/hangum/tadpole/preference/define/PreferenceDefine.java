@@ -41,10 +41,10 @@ public class PreferenceDefine extends AdminPreferenceDefine {
 	public static final String DEFAULT_HOME_PAGE_USE 		= "DEFAULT_HOME_PAGE_USE";
 	public static final String DEFAULT_HOME_PAGE_USE_VALUE 	= "false";
 	
-	/** RDB query profillint */ 
-	public static final String RDB_QUERY_PROFILLING = "RDB_QUERY_PROFILLING";
-	/** RDB query profillint 값 */
-	public static final String RDB_QUERY_PROFILLING_VALUE = "false";
+	/** RDB query profiling */ 
+	public static final String RDB_QUERY_PROFILING = "RDB_QUERY_PROFILING";
+	/** RDB query profiling 값 */
+	public static final String RDB_QUERY_PROFILING_VALUE = "false";
 	
 	/** RDB Result 값중에 NULL값이 있을 경우 처리 */ 
 	public static final String RDB_RESULT_NULL = "RDB_RESULT_NULL";

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
@@ -79,7 +80,7 @@ public class MySQLExtensionViewDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("SHOW PROFILE and Others Dialog");
+		newShell.setText(Messages.get().ProfilingResults);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -104,12 +105,12 @@ public class MySQLExtensionViewDialog extends Dialog {
 		compositeBody.setLayout(new GridLayout(1, false));
 		compositeBody.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		tvShowProfiller = createTitleTable(compositeBody, "SHOW PROFILE Result");
-		tvShowStatus 	= createTitleTable(compositeBody, "Change Of STATUS VARIABLES");
+		tvShowProfiller = createTitleTable(compositeBody, Messages.get().ProfilingInformation);
+		tvShowStatus 	= createTitleTable(compositeBody, Messages.get().ServerStatusInformation);
 		
 		Object mapQueryPlan = rsDAO.getMapExtendResult().get(MYSQL_EXTENSION_VIEW.EXECUTE_PLAN.name());;
 		if(mapQueryPlan != null) {
-			tvExecutePlan 	= createTitleTable(compositeBody, "Execute Plan");
+			tvExecutePlan 	= createTitleTable(compositeBody, Messages.get().ExecutionPlan);
 		}
 		
 		if(mapQueryPlan != null) {

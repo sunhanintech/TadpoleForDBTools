@@ -68,11 +68,11 @@ public class GetPreferenceGeneral extends AbstractPreference {
 	
 	////////////////// rdb 설정 ////////////////////////////////////////////////////////////////////////////
 	/** 
-	 * RDB_QUERY_PROFILLING
+	 * RDB_QUERY_PROFILING
 	 * @return
 	 */
-	public static boolean getRDBQueryProfilling() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, PreferenceDefine.RDB_QUERY_PROFILLING_VALUE);
+	public static boolean getRDBQueryProfiling() {
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_QUERY_PROFILING, PreferenceDefine.RDB_QUERY_PROFILING_VALUE);
 		return Boolean.parseBoolean(userInfo.getValue0());
 	}
 	

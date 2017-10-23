@@ -107,10 +107,14 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
     private OpenSingleRowDataDialogAction openSingleRowDataAction;
     private ColumnRowDataDialogAction columnRowDataDialogAction;
 	
-    /** mysql profilling yn */
-    private Button btnShowQueryProfilling;
+    /** mysql profiling yn */
+    private Button btnShowQueryProfiling;
     
-    private Button btnResultRowToEditor;
+    /* false: Profiler is not running. 
+     * true: Profiler is enabled and running. */
+    private boolean isProfilingEnabled; 
+
+	private Button btnResultRowToEditor;
     private Button btnResultColumnToEditor;
     
     private Button btnDetailView;
@@ -258,26 +262,41 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 		final UserDBDAO userDB = rdbResultComposite.getUserDB();
 		if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			
-			final Button btnQueryProfilling = new Button(compositeBtn, SWT.CHECK);
-			btnQueryProfilling.setText(Messages.get().WhetherProfile);
-			btnQueryProfilling.addSelectionListener(new SelectionAdapter() {
+			final Button btnQueryProfiling = new Button(compositeBtn, SWT.NONE);
+			setProfilingDisabled();  /* not running */
+			btnQueryProfiling.setText(Messages.get().StartProfiling);
+			btnQueryProfiling.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try {
-						boolean booleanQueryProfilling = btnQueryProfilling.getSelection();
-						TadpoleSystem_UserInfoData.updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILLING, ""+booleanQueryProfilling);
-						SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, ""+booleanQueryProfilling);
-						
-						btnShowQueryProfilling.setEnabled(booleanQueryProfilling);
+						if(isProfilingEnabled() == false) {
+							setProfilingEnabled();
+							TadpoleSystem_UserInfoData.updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILING, ""+isProfilingEnabled());
+							SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILING, ""+isProfilingEnabled());
+							
+							btnShowQueryProfiling.setEnabled(true);
+							btnQueryProfiling.setText(Messages.get().StopProfiling);
+						} else {
+							/* Profiling has been enabled and running. */
+							setProfilingDisabled();
+							btnShowQueryProfiling.setEnabled(false);
+							btnQueryProfiling.setText(Messages.get().StartProfiling);
+						}
+//						boolean enableProfilling = btnQueryProfiling.getSelection();
+//						TadpoleSystem_UserInfoData.updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILING, ""+enableProfilling);
+//						SessionManager.setUserInfo(PreferenceDefine.RDB_QUERY_PROFILING, ""+enableProfilling);
+//
+//						btnShowQueryProfiling.setEnabled(enableProfilling);
+//						btnQueryProfiling.setText(Messages.get().StopProfiling);
 					} catch(Exception ee) {
 						logger.error("Update RDB query profilling option", ee);
 					}
 				}
 			});
-			btnQueryProfilling.setSelection(GetPreferenceGeneral.getRDBQueryProfilling());
+			btnQueryProfiling.setSelection(GetPreferenceGeneral.getRDBQueryProfiling());
 			
-			btnShowQueryProfilling = new Button(compositeBtn, SWT.NONE);
-			btnShowQueryProfilling.addSelectionListener(new SelectionAdapter() {
+			btnShowQueryProfiling = new Button(compositeBtn, SWT.NONE);
+			btnShowQueryProfiling.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					
@@ -291,8 +310,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 					}
 				}
 			});
-			btnShowQueryProfilling.setText(Messages.get().ShowProfileResult);
-			btnShowQueryProfilling.setEnabled(GetPreferenceGeneral.getRDBQueryProfilling());
+			btnShowQueryProfiling.setText(Messages.get().ShowProfileResult);
+			btnShowQueryProfiling.setEnabled(GetPreferenceGeneral.getRDBQueryProfiling());
 		} // end mysql profile
 		
 		btnResultRowToEditor = new Button(compositeBtn, SWT.NONE);
@@ -709,6 +728,20 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	@Override
 	public RESULT_COMP_TYPE getResultType() {
 		return RESULT_COMP_TYPE.Table;
+	}
+	
+	
+	/* Getter & Setter */
+    public boolean isProfilingEnabled() {
+		return isProfilingEnabled;
+	}
+
+	public void setProfilingEnabled() {
+		this.isProfilingEnabled = true;
+	}
+	
+	public void setProfilingDisabled() {
+		this.isProfilingEnabled = false;
 	}
 	
 }

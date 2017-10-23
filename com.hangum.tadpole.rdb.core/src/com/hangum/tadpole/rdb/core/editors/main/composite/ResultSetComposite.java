@@ -423,7 +423,7 @@ public class ResultSetComposite extends Composite {
 		final String errMsg = Messages.get().MainEditor_21;
 		final RequestResultDAO reqResultDAO = new RequestResultDAO();
 		// is profilling
-		final boolean isProfilling = GetPreferenceGeneral.getRDBQueryProfilling();
+		final boolean isProfilling = GetPreferenceGeneral.getRDBQueryProfiling();
 		
 		jobQueryManager = new Job(Messages.get().MainEditor_45) {
 			@Override

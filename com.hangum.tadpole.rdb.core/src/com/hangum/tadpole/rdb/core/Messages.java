@@ -607,8 +607,6 @@ public class Messages {
 
 	public String DoNotShowProfileResult;
 
-	public String WhetherProfile;
-
 	public String SelectSearchObject;
 
 	public String ExportSQLComposite_UpdateMsg;
@@ -724,7 +722,13 @@ public class Messages {
 
 	public String ConfirmRollback;
 	
-	
+	/* Profiling */
+	public String StartProfiling;
+	public String StopProfiling;
+	public String ProfilingResults; /* Title of the Profiling Result dialog */
+	public String ProfilingInformation; /* profiling result from 'show profile' */
+	public String ServerStatusInformation; /* server status variables from 'show status' */
+	public String ExecutionPlan;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
