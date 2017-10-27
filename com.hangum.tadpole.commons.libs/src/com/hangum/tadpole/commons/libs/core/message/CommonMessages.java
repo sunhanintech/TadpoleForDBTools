@@ -202,6 +202,8 @@ public class CommonMessages {
 	public String Manual;
 	
 	public String TadpoleAdministrator;
+	
+	public String StartTime; 
 
 	
 	public static CommonMessages get() {

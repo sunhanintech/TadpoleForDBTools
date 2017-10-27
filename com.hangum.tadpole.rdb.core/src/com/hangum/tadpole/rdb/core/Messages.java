@@ -730,6 +730,7 @@ public class Messages {
 	public String ServerStatusInformation; /* server status variables from 'show status' */
 	public String ExecutionPlan;
 	
+	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
 	}
