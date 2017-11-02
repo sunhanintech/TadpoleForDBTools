@@ -29,6 +29,9 @@ public class RequestResultDAO {
 
 	/** execute sql text */
 	String strSQLText;
+	
+	/* query details = parameters... */
+	String queryDetails;
 
 	Timestamp endDateExecute;
 	int rows;
@@ -64,7 +67,7 @@ public class RequestResultDAO {
 	}
 
 	// Sql history for executedSqlEditor
-	public RequestResultDAO(int duration, String userName, String dbName, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message,
+	public RequestResultDAO(int duration, String userName, String dbName, Timestamp dateExecute, String strSQLText, String queryDetails, Timestamp endDateExecute, int rows, String result, String message,
 			String ipAddress, int dbSeq, String strDescription) {
 		this.duration = duration;
 		this.userName = userName;
@@ -73,6 +76,7 @@ public class RequestResultDAO {
 		this.dbSeq = dbSeq;
 		this.startDateExecute = dateExecute;
 		this.strSQLText = strSQLText;
+		this.queryDetails = queryDetails;
 		this.endDateExecute = endDateExecute;
 		this.rows = rows;
 		this.result = result;
@@ -125,6 +129,14 @@ public class RequestResultDAO {
 
 	public String getStrSQLText() {
 		return strSQLText;
+	}
+	
+	public void setQueryDetails(String queryDetails) {
+		this.queryDetails = queryDetails;
+	}
+	
+	public String getQueryDetails() {
+		return this.queryDetails;
 	}
 
 	public void setStrSQLText(String strSQLText) {

@@ -1009,8 +1009,8 @@ SELECT
 	이메일 배치 처리를 위해 데이터를 저장한다.
  -->
 <insert id="insertEmailBag" parameterClass="com.hangum.tadpole.engine.query.dao.system.ExecutedSqlResourceDataDAO">
-	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, sql_data)
-	VALUES(#executed_sql_resource_seq#, #sql_data#)
+	INSERT INTO executed_sql_resource_data(executed_sql_resource_seq, sql_data, queryDetails)
+	VALUES(#executed_sql_resource_seq#, #sql_data#, #queryDetails#)
 </insert>
 
 </sqlMap>

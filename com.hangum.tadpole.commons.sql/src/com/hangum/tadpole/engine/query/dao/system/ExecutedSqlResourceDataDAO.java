@@ -23,6 +23,7 @@ public class ExecutedSqlResourceDataDAO {
 	Timestamp startDateExecute;
 	long executed_sql_resource_seq;
     String sql_data;
+    String queryDetails;
     Timestamp ctreate_time;
     
 	public ExecutedSqlResourceDataDAO() {
@@ -76,6 +77,14 @@ public class ExecutedSqlResourceDataDAO {
 	 */
 	public void setSql_data(String sql_data) {
 		this.sql_data = sql_data;
+	}
+	
+	public String getQueryDetails() {
+		return this.queryDetails;
+	}
+	
+	public void setQueryDetails(String queryDetails) {
+		this.queryDetails = queryDetails;
 	}
 
 	/**
