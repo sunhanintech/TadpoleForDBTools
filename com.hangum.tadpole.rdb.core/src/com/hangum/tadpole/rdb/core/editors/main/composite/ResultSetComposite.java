@@ -433,10 +433,11 @@ public class ResultSetComposite extends Composite {
 				reqResultDAO.setStartDateExecute(new Timestamp(System.currentTimeMillis()));
 				reqResultDAO.setIpAddress(reqQuery.getUserIp());
 				
-				StringBuffer sbParameter = new StringBuffer("/* " + reqQuery.getMode() + " */");
+				StringBuffer sbParameter = new StringBuffer("");
 				// prepared statement 일 경우는 인자도 넣어준다.
 				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
-					for (int i=0; i<reqQuery.getStatementParameter().length; i++) {
+					sbParameter.append("/* Parameter(s) */\n");
+					for (int i=0; i<reqQuery.getStatementParameter().length; i++) {	
 						Object objParam = reqQuery.getStatementParameter()[i];
 						sbParameter.append(String.format("[ %d = %s ]", i, ""+objParam));
 					}

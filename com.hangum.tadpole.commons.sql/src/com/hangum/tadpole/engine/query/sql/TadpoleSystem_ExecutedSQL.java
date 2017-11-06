@@ -26,6 +26,7 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
@@ -64,7 +65,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws SQLException
 	 */
 	public static List<RequestResultDAO> getAllExecuteQueryHistoryDetail(String strEmail, String strType, long startTime, long endTime, int duringExecute, String strSearch, int _indexStart, int _indexEnd) throws TadpoleSQLManagerException, SQLException {
-		return getExecuteQueryHistoryDetail(strEmail, strType, "", startTime, endTime, duringExecute, strSearch, _indexStart, _indexEnd);
+		return getExecuteQueryHistoryDetail(strEmail, strType, "", startTime, endTime, duringExecute, strSearch, "", _indexStart, _indexEnd);
 	}
 
 	/**
@@ -90,6 +91,7 @@ public class TadpoleSystem_ExecutedSQL {
 																	long endTime, 
 																	int duringExecute, 
 																	String strSearch, 
+																	String aResult, 
 																	int _indexStart, 
 																	int _indexEnd
 																	) throws TadpoleSQLManagerException, SQLException {
@@ -103,7 +105,7 @@ public class TadpoleSystem_ExecutedSQL {
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("email", 	strEmail);
 		if(!"".equals(dbSeq)) queryMap.put("db_seq", 	dbSeq);
-		if(!"All".equals(strType)) queryMap.put("type", strType);
+		if(!CommonMessages.get().All.equals(strType)) queryMap.put("type", strType);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date date = new Date(TimeZoneUtil.chageTimeZone(startTime));
@@ -119,6 +121,13 @@ public class TadpoleSystem_ExecutedSQL {
 		
 		queryMap.put("duration", duringExecute);
 		queryMap.put("strSearch", strSearch);
+		if(aResult.equalsIgnoreCase(CommonMessages.get().Success) == true) {
+			queryMap.put("result", "S");
+		} else if(aResult.equalsIgnoreCase(CommonMessages.get().Failure) == true){
+			queryMap.put("result", "F");
+		} else {
+			queryMap.put("result", "%");  // All
+		}
 		queryMap.put("_indexStart", _indexStart);
 		queryMap.put("_indexEnd", _indexEnd);
 		

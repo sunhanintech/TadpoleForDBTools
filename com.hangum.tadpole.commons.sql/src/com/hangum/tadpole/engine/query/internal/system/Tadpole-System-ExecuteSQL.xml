@@ -97,6 +97,7 @@
       AND a.duration >= #duration# 
       AND b.sql_data like #strSearch#  
       AND a.db_seq = db.seq
+      AND a.result LIKE #result#
  ]]>	       
       <isNotNull property="type">
       	AND a.types = #type#
@@ -166,6 +167,7 @@
       AND a.user_seq = u.seq 
       AND b.sql_data like #strSearch#  
       AND a.db_seq = db.seq 
+      AND a.result LIKE #result#
 ]]>	
       
        <isNotNull property="type">

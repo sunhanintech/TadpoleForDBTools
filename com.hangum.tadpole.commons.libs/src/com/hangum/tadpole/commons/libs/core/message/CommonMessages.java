@@ -204,6 +204,12 @@ public class CommonMessages {
 	public String TadpoleAdministrator;
 	
 	public String StartTime; 
+	
+	public String All;
+	public String Success;
+	public String Failure;
+	
+	public String SearchConditions;
 
 	
 	public static CommonMessages get() {
