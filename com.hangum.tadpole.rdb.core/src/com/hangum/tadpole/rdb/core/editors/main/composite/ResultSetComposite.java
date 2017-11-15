@@ -555,10 +555,11 @@ public class ResultSetComposite extends Composite {
 								TransactionManger.calledCommitOrRollback(reqQuery.getSql(), strUserEmail, getUserDB());
 							}
 						} else {
-							int intEfficeCnt = ExecuteOtherSQL.runPermissionSQLExecution(errMsg, reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
-							if(intEfficeCnt != -1) {
-								long longUseTime = System.currentTimeMillis() - reqResultDAO.getStartDateExecute().getTime();
-								reqResultDAO.setMesssage(String.format(MSG_ROW_CHAGE, intEfficeCnt, longUseTime));
+							int affectedRowCount = ExecuteOtherSQL.runPermissionSQLExecution(errMsg, reqQuery, getUserDB(), getDbUserRoleType(), strUserEmail);
+							if(affectedRowCount != -1) {
+								long runTime = System.currentTimeMillis() - reqResultDAO.getStartDateExecute().getTime();
+								reqResultDAO.setMesssage(String.format(MSG_ROW_CHAGE, affectedRowCount, runTime));
+								reqResultDAO.setRows(affectedRowCount);
 							}
 						}
 					}

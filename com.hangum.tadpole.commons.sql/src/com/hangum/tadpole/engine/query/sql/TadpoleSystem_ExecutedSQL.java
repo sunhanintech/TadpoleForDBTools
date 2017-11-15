@@ -126,13 +126,14 @@ public class TadpoleSystem_ExecutedSQL {
 		} else if(aResult.equalsIgnoreCase(CommonMessages.get().Failure) == true){
 			queryMap.put("result", "F");
 		} else {
-			queryMap.put("result", "%");  // All
+			queryMap.put("result", "%%");  // All
 		}
 		queryMap.put("_indexStart", _indexStart);
 		queryMap.put("_indexEnd", _indexEnd);
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<java.util.Map> listResourceData =  new ArrayList<Map>();
+		
 		if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
 			listResourceData = sqlClient.queryForList("getExecuteQueryHistoryAPIDetail", queryMap);			
 		} else {
@@ -173,8 +174,19 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			String strResultSaveYn = (String)resultMap.get("result_save_yn");
 
-			RequestResultDAO dao = new RequestResultDAO(duration,strFullName, dbName, new Timestamp(startdateexecute), strSQLText, queryDetails, new Timestamp(enddateexecute), row, result, strMessage,
-					ipAddress, dbSeq2, strDescription);
+			RequestResultDAO dao = new RequestResultDAO(duration,
+													   strFullName, 
+													   dbName, 
+													   new Timestamp(startdateexecute), 
+													   strSQLText, 
+													   queryDetails, 
+													   new Timestamp(enddateexecute), 
+													   row, 
+													   result, 
+													   strMessage,
+													   ipAddress, 
+													   dbSeq2, 
+													   strDescription);
 			dao.setSeq(seq);
 			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
 				dao.setEXECUSTE_SQL_TYPE(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API);
@@ -184,9 +196,15 @@ public class TadpoleSystem_ExecutedSQL {
 			dao.setResult_save_yn(strResultSaveYn);
 			
 			returnSQLHistory.add(dao);
-		}
+		} /* for */
 		
 		return returnSQLHistory;
+	}
+	
+	public static Integer getQueryHistoryTotalRowCount(Map<String, Object> queryMap) throws TadpoleSQLManagerException, SQLException {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+			
+			return ((Integer)sqlClient.queryForObject("getQueryHistoryTotalRowCount", queryMap)).intValue();
 	}
 	
 	/**
@@ -285,7 +303,11 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			executeSQLResourceDao.setRow(requestResultDAO.getRows());
 			executeSQLResourceDao.setResult(requestResultDAO.getResult());
-			executeSQLResourceDao.setMessage(requestResultDAO.getMesssage());
+			if(requestResultDAO.getResult().equalsIgnoreCase("F") == true) {
+				// 메시지는 결과가 실패일 경우만 저장한다. 
+				// 성공일 경우에는 화면에만 보여주고 별도로 저장하지는 않는다.
+				executeSQLResourceDao.setMessage(requestResultDAO.getMesssage());
+			}
 			executeSQLResourceDao.setIpAddress(requestResultDAO.getIpAddress());
 			if(!"".equals(strExecuteResultData)) {
 				executeSQLResourceDao.setResult_save_yn(PublicTadpoleDefine.YES_NO.YES.name());
